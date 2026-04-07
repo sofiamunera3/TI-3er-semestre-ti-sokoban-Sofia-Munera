@@ -961,3 +961,38 @@ El manual de usuario queda visible y disponible para consulta.
 | CP02 | No mostrar manual con solicitud falsa | Setup11 | Solicitud: false | 1. No activar solicitud | No se muestra el manual | Rechazado |
 
 ---
+---
+
+## **Diseño de pruebas unitarias - Capa Model (Target, PlayerPiece, Level, GameManager)**
+
+### **Setups unitarios**
+
+| ID Setup | Nombre | Descripción |
+|---|---|---|
+| SetupUT1 | Objetivo libre | Se crea `Target` en coordenadas válidas sin caja sobre el objetivo. |
+| SetupUT2 | Jugador en posición central | Se crea `PlayerPiece` en `(4,4)` para validar movimientos en las 4 direcciones. |
+| SetupUT3 | Nivel sin cargar | Se crea una instancia `Level` en estado inicial para probar carga desde archivo. |
+| SetupUT4 | Gestor de juego nuevo | Se crea `GameManager` sin estado previo para validar inicialización, carga de nivel y victoria. |
+
+### **Tabla de evaluación por método (`nombreDelMetodoTest`)**
+
+| Clase | nombreDelMetodoTest | Setup | Escenario evaluado | Resultado esperado |
+|---|---|---|---|---|
+| `Target` | `isOccupiedTest_debeRetornarFalseCuandoNoHayCajaSobreElObjetivo` | SetupUT1 | El objetivo no tiene una caja asignada. | `isOccupied()` retorna `false`. |
+| `PlayerPiece` | `moveTest_debeMoverArribaUnaCelda` | SetupUT2 | Se mueve el jugador en dirección `UP`. | Nueva posición `(4,3)`. |
+| `PlayerPiece` | `moveTest_debeMoverAbajoUnaCelda` | SetupUT2 | Se mueve el jugador en dirección `DOWN`. | Nueva posición `(4,5)`. |
+| `PlayerPiece` | `moveTest_debeMoverIzquierdaUnaCelda` | SetupUT2 | Se mueve el jugador en dirección `LEFT`. | Nueva posición `(3,4)`. |
+| `PlayerPiece` | `moveTest_debeMoverDerechaUnaCelda` | SetupUT2 | Se mueve el jugador en dirección `RIGHT`. | Nueva posición `(5,4)`. |
+| `Level` | `loadFromFileTest_debeCargarNumeroDificultadYTableroConArchivoValido` | SetupUT3 | Se carga un archivo JSON válido con número, dificultad y tablero. | Nivel actualizado con datos del archivo. |
+| `Level` | `loadFromFileTest_debeConservarEstadoInicialCuandoLaRutaEsInvalida` | SetupUT3 | Se intenta cargar una ruta inexistente. | El estado inicial del nivel no cambia. |
+| `GameManager` | `startGameTest_debeInicializarTableroAvatarYProgreso` | SetupUT4 | Se inicia la partida con `startGame()`. | Tablero, avatar y progreso inicializados. |
+| `GameManager` | `loadLevelTest_debeCargarTableroDelNivelSeleccionado` | SetupUT4 | Se carga un `Level` con tablero predefinido. | El tablero del juego corresponde al del nivel. |
+| `GameManager` | `checkWinTest_debeRetornarTrueCuandoTodasLasCajasEstanEnObjetivos` | SetupUT4 | El tablero reporta `allBoxesOnTargets = true`. | `checkWin()` retorna `true`. |
+| `GameManager` | `checkWinTest_debeRetornarFalseCuandoFaltanCajasPorUbicar` | SetupUT4 | El tablero reporta `allBoxesOnTargets = false`. | `checkWin()` retorna `false`. |
+
+### **Relación con clases tester implementadas**
+
+- `src/test/java/org/model/TargetTest.java`
+- `src/test/java/org/model/PlayerPieceTest.java`
+- `src/test/java/org/model/LevelTest.java`
+- `src/test/java/org/model/GameManagerTest.java`
