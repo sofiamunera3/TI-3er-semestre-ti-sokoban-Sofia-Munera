@@ -961,3 +961,66 @@ El manual de usuario queda visible y disponible para consulta.
 | CP02 | No mostrar manual con solicitud falsa | Setup11 | Solicitud: false | 1. No activar solicitud | No se muestra el manual | Rechazado |
 
 ---
+
+### **Casos de prueba**
+
+| Caso | Estado de victoria | Resultado esperado | Comentarios |
+|---|---|---|---|
+| 1 | Sí | Mostrar “Victoria” | Ganó el nivel |
+| 2 | No | Mostrar “Game Over” | No completó el nivel |
+
+---
+
+## **RF18 - Manual de usuario**
+**Técnica aplicada: Partición de Equivalencia**
+
+### **Tabla de clases de equivalencia**
+
+| Criterio | Clases válidas (V) | Clases inválidas (I) |
+|---|---|---|
+| Solicitud de manual | V1: True | I1: False |
+
+### **Casos de prueba**
+
+| ID | Descripción | Setup | Datos de prueba | Pasos | Resultado esperado | Estado |
+|---|---|---|---|---|---|---|
+| CP01 | Mostrar manual con solicitud verdadera | Setup11 | Solicitud: true | 1. Seleccionar Manual<br>2. Confirmar | Se muestra el manual | Aceptado |
+| CP02 | No mostrar manual con solicitud falsa | Setup11 | Solicitud: false | 1. No activar solicitud | No se muestra el manual | Rechazado |
+
+---
+### **Configuración de los Escenarios**
+
+| Nombre      | Clase           | Escenario                                                                                                                                          |
+| ----------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| setupStage1 | GameManagerTest | Se crea un objeto GameManager recién inicializado.                                                                                                 |
+| setupStage2 | GameManagerTest | Se crea un objeto GameManager, un objeto Level y un objeto Board(6, 6) que se asigna al nivel mediante level.setBoard(board).                      |
+| setupStage3 | GameManagerTest | Se crea un objeto GameManager y se le asigna un Board(1, 1) anónimo sobrescribiendo el método allBoxesOnTargets() para retornar un valor booleano. |
+| setupStage4 | PlayerPieceTest | Se crea un objeto PlayerPiece con coordenadas iniciales new Coordinates(4, 4).                                                                     |
+| setupStage5 | TargetTest      | Se crea un objeto Target con coordenadas iniciales new Coordinates(2, 3).                                                                          |
+
+### **Diseño de Casos de Prueba**
+
+## **Objetivo de la Prueba:** Verificar la correcta inicialización del juego, la carga de un nivel y la validación de victoria en la clase GameManager.
+
+| Clase       | Método                 | Escenario   | Valores de Entrada                            | Resultado esperado                                                           |
+| ----------- | ---------------------- | ----------- | --------------------------------------------- | ---------------------------------------------------------------------------- |
+| GameManager | startGame()            | setupStage1 | Ninguno                                       | getBoard(), getAvatar() y getProgress() retornan valores diferentes de null. |
+| GameManager | loadLevel(Level level) | setupStage2 | level con un Board(6, 6) asignado previamente | getBoard() retorna la misma instancia de board.                              |
+| GameManager | checkWin()             | setupStage3 | Ninguno                                       | Retorna true cuando allBoxesOnTargets() retorna true.                        |
+| GameManager | checkWin()             | setupStage3 | Ninguno                                       | Retorna false cuando allBoxesOnTargets() retorna false.                      |
+
+## **Objetivo de la Prueba:** Verificar el movimiento de la clase PlayerPiece en cada una de las direcciones posibles.
+
+| Clase       | Método                        | Escenario   | Valores de Entrada  | Resultado esperado                              |
+| ----------- | ----------------------------- | ----------- | ------------------- | ----------------------------------------------- |
+| PlayerPiece | move(MoveDirection direction) | setupStage4 | MoveDirection.UP    | La ubicación final del jugador es x = 4, y = 3. |
+| PlayerPiece | move(MoveDirection direction) | setupStage4 | MoveDirection.DOWN  | La ubicación final del jugador es x = 4, y = 5. |
+| PlayerPiece | move(MoveDirection direction) | setupStage4 | MoveDirection.LEFT  | La ubicación final del jugador es x = 3, y = 4. |
+| PlayerPiece | move(MoveDirection direction) | setupStage4 | MoveDirection.RIGHT | La ubicación final del jugador es x = 5, y = 4. |
+
+## **Objetivo de la Prueba:** Verificar que el método isOccupied() de la clase Target retorne false cuando se consulta un objetivo recién creado.
+
+| Clase  | Método       | Escenario   | Valores de Entrada | Resultado esperado |
+| ------ | ------------ | ----------- | ------------------ | ------------------ |
+| Target | isOccupied() | setupStage5 | Ninguno            | Retorna false.     |
+
