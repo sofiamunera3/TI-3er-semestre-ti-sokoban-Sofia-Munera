@@ -1024,3 +1024,646 @@ El manual de usuario queda visible y disponible para consulta.
 | ------ | ------------ | ----------- | ------------------ | ------------------ |
 | Target | isOccupied() | setupStage5 | Ninguno            | Retorna false.     |
 
+# Historias de Usuario
+
+---
+
+## HU-01 – Registro de jugador
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Registro de jugador |
+| **Yo, como** | jugador nuevo |
+| **Quiero** | registrarme con mi nombre completo, correo electrónico, username, avatar y nivel de experiencia |
+| **Para** | poder acceder al juego con un perfil válido y personalizado |
+
+### Criterios de Aceptación
+
+**Scenario: Registro exitoso con datos válidos**
+
+**Given:** el jugador se encuentra en la pantalla de registro
+
+**When:** ingresa nombre completo válido, correo válido, username, avatar y nivel de experiencia
+
+**Then:** el sistema crea el perfil del jugador
+
+**And:** muestra un mensaje de confirmación del registro
+
+**Scenario: Registro fallido por correo inválido**
+
+**Given:** el jugador se encuentra en la pantalla de registro
+
+**When:** ingresa un correo con formato inválido
+
+**Then:** el sistema muestra un mensaje de error indicando que el correo no es válido
+
+**And:** no permite completar el registro
+
+**Scenario: Registro fallido por campos obligatorios vacíos**
+
+**Given:** el jugador se encuentra en la pantalla de registro
+
+**When:** intenta enviar el formulario sin completar todos los campos obligatorios
+
+**Then:** el sistema resalta los campos faltantes
+
+**And:** no habilita el acceso al juego
+
+---
+
+## HU-02 – Carga de niveles
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Carga de niveles |
+| **Yo, como** | jugador registrado |
+| **Quiero** | cargar niveles definidos en archivos JSON |
+| **Para** | poder jugar tableros configurados previamente por el sistema |
+
+### Criterios de Aceptación
+
+**Scenario: Carga exitosa de un nivel válido**
+
+**Given:** el jugador ha seleccionado un archivo JSON de nivel válido
+
+**When:** solicita cargar el nivel
+
+**Then:** el sistema interpreta la estructura del archivo
+
+**And:** construye el tablero con sus elementos correspondientes
+
+**Scenario: Carga rechazada por archivo inválido**
+
+**Given:** el jugador seleccionó un archivo inexistente o con estructura incorrecta
+
+**When:** intenta cargar el nivel
+
+**Then:** el sistema muestra un mensaje indicando que el archivo no es válido
+
+**And:** no inicializa el tablero
+
+---
+
+## HU-03 – Inicio de partida (juego)
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Inicio de partida |
+| **Yo, como** | jugador registrado |
+| **Quiero** | iniciar una partida después de registrarme y elegir un nivel |
+| **Para** | comenzar a jugar con el tablero preparado y los indicadores activos |
+
+### Criterios de Aceptación
+
+**Scenario: Inicio exitoso de la partida**
+
+**Given:** existe un jugador registrado y un nivel seleccionado
+
+**When:** el jugador presiona la opción de iniciar juego
+
+**Then:** el sistema carga el tablero inicial del nivel
+
+**And:** activa el cronómetro y los contadores de partida
+
+**Scenario: Intento de inicio sin requisitos previos**
+
+**Given:** no existe un jugador registrado o no se ha seleccionado un nivel
+
+**When:** el usuario intenta iniciar la partida
+
+**Then:** el sistema impide el inicio del juego
+
+**And:** muestra un mensaje indicando la información faltante
+
+---
+
+## HU-04 – Visualización del tablero
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Visualización del tablero |
+| **Yo, como** | jugador |
+| **Quiero** | ver el tablero actualizado con el jugador, cajas, muros, objetivos y espacios libres |
+| **Para** | entender el estado real del nivel y tomar decisiones de juego |
+
+### Criterios de Aceptación
+
+**Scenario: Visualización inicial del tablero**
+
+**Given:** la partida fue iniciada correctamente
+
+**When:** el sistema muestra la pantalla del juego
+
+**Then:** el tablero presenta la ubicación inicial de todos los elementos
+
+**And:** la representación visual coincide con el nivel cargado
+
+**Scenario: Actualización visual después de una acción**
+
+**Given:** el tablero se encuentra visible en pantalla
+
+**When:** el jugador realiza un movimiento válido
+
+**Then:** el sistema actualiza la posición de los elementos afectados
+
+**And:** refleja el nuevo estado del tablero sin inconsistencias
+
+---
+
+## HU-05 – Movimiento del jugador
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Movimiento del jugador |
+| **Yo, como** | jugador |
+| **Quiero** | mover mi personaje con las flechas del teclado |
+| **Para** | recorrer el tablero y resolver el nivel manualmente |
+
+### Criterios de Aceptación
+
+**Scenario: Movimiento válido hacia una casilla libre**
+
+**Given:** el jugador se encuentra junto a una casilla libre
+
+**When:** presiona una tecla de dirección válida
+
+**Then:** el sistema desplaza al personaje a la casilla siguiente
+
+**And:** incrementa el contador de movimientos
+
+**Scenario: Movimiento rechazado hacia una casilla no permitida**
+
+**Given:** el jugador intenta desplazarse hacia una dirección bloqueada
+
+**When:** presiona la tecla de movimiento correspondiente
+
+**Then:** el sistema mantiene al personaje en la posición actual
+
+**And:** no altera el estado del tablero
+
+---
+
+## HU-06 – Empuje de cajas
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Empuje de cajas |
+| **Yo, como** | jugador |
+| **Quiero** | empujar una caja cuando el espacio siguiente esté libre |
+| **Para** | poder llevar las cajas hasta sus objetivos para completar el nivel |
+
+### Criterios de Aceptación
+
+**Scenario: Empuje válido de una caja**
+
+**Given:** el jugador está frente a una caja y la casilla posterior está libre
+
+**When:** ejecuta un movimiento hacia la caja
+
+**Then:** el sistema desplaza la caja una casilla en la misma dirección
+
+**And:** mueve también al jugador a la posición anterior de la caja
+
+**Scenario: Empuje inválido por bloqueo**
+
+**Given:** el jugador está frente a una caja y la casilla posterior está ocupada o bloqueada
+
+**When:** intenta empujar la caja
+
+**Then:** el sistema rechaza la acción
+
+**And** mantiene sin cambios la posición del jugador y de la caja
+
+---
+
+## HU-07 – Validación de movimientos
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Validación de movimientos |
+| **Yo, como** | jugador |
+| **Quiero** | que el sistema valide cada movimiento antes de ejecutarlo |
+| **Para** | evitar acciones inválidas y jugar bajo las reglas correctas de Sokoban |
+
+### Criterios de Aceptación
+
+**Scenario: Bloqueo por muro u obstáculo**
+
+**Given:** existe un muro u obstáculo en la dirección del movimiento
+
+**When:** el jugador intenta desplazarse hacia esa dirección
+
+**Then:** el sistema rechaza el movimiento
+
+**And:** no modifica el tablero ni los contadores de empuje
+
+**Scenario: Bloqueo por intento de empujar dos cajas**
+
+**Given** el jugador tiene una caja enfrente y otra caja inmediatamente detrás
+
+**When** intenta empujar en esa dirección
+
+**Then** el sistema invalida la acción
+
+**And** conserva el estado actual del nivel
+
+---
+
+## HU-08 – Verificación de victoria
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Verificación de victoria |
+| **Yo, como** | jugador |
+| **Quiero** | que el sistema detecte automáticamente cuando todas las cajas estén en sus objetivos |
+| **Para** | saber de inmediato cuándo he completado el nivel |
+
+### Criterios de Aceptación
+
+**Scenario: Detección de victoria**
+
+**Given:** todas las cajas han sido ubicadas en posiciones objetivo
+
+**When:** finaliza el movimiento que completa la condición del nivel
+
+**Then:** el sistema marca la partida como ganada
+
+**And:** habilita la pantalla de resultado con estado de victoria
+
+**Scenario: Nivel aún no completado**
+
+**Given:** al menos una caja permanece fuera de un objetivo
+
+**When:** el jugador realiza un movimiento válido
+
+**Then:** el sistema mantiene la partida activa
+
+**And:** no muestra el mensaje de victoria
+
+---
+
+## HU-09 – Guardar y cargar partida
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Guardar y cargar partida |
+| **Yo, como** | jugador |
+| **Quiero** | guardar mi progreso y retomarlo más tarde |
+| **Para** | continuar una partida sin perder el estado alcanzado |
+
+### Criterios de Aceptación
+
+**Scenario: Guardado exitoso de partida**
+
+**Given:** existe una partida activa en curso
+
+**When:** el jugador selecciona la opción guardar partida
+
+**Then:** el sistema almacena el estado actual del juego en un archivo persistente
+
+**And:** muestra un mensaje de confirmación del guardado
+
+**Scenario: Carga exitosa de una partida guardada**
+
+**Given:** existe una partida previamente guardada
+
+**When:** el jugador selecciona la opción cargar partida
+
+**Then:** el sistema restaura el tablero, los contadores y el tiempo registrado
+
+**And:** permite continuar desde el punto guardado
+
+---
+
+## HU-10 – Consulta de estadísticas del jugador
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Consulta de estadísticas del jugador |
+| **Yo, como** | jugador |
+| **Quiero** | ver mis estadísticas por nivel y por partidas jugadas |
+| **Para** | analizar mi progreso y desempeño dentro del juego |
+
+### Criterios de Aceptación
+
+**Scenario: Consulta de estadísticas disponibles**
+
+**Given:** el jugador tiene partidas registradas en el sistema
+
+**When:** abre la pantalla de estadísticas
+
+**Then:** el sistema muestra movimientos, empujes, tiempos y niveles completados
+
+**And:** organiza la información de manera clara para su consulta
+
+**Scenario: Consulta sin historial registrado**
+
+**Given:** el jugador no tiene estadísticas asociadas
+
+**When:** intenta abrir la pantalla de estadísticas
+
+**Then:** el sistema informa que no hay datos disponibles
+
+**And:** mantiene accesible la navegación hacia otras opciones
+
+---
+
+## HU-11 – Visualización del ranking de jugadores
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Visualización del ranking de jugadores |
+| **Yo, como** | jugador |
+| **Quiero** | consultar el ranking general según el desempeño alcanzado |
+| **Para** | comparar mis resultados con los de otros jugadores |
+
+### Criterios de Aceptación
+
+**Scenario: Ranking generado con criterio válido**
+
+**Given:** existen jugadores con estadísticas acumuladas
+
+**When:** el usuario abre la pantalla de ranking usando un criterio permitido
+
+**Then:** el sistema ordena a los jugadores según dicho criterio
+
+**And:** muestra la posición correspondiente de cada jugador
+
+**Scenario: Ranking sin datos suficientes**
+
+**Given:** no existen resultados registrados para construir el ranking
+
+**When:** el usuario accede a la pantalla de ranking
+
+**Then:** el sistema informa que no hay datos disponibles
+
+**And:** no intenta generar una clasificación vacía
+
+---
+
+## HU-12 – Deshacer movimiento
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Deshacer movimiento |
+| **Yo, como** | jugador |
+| **Quiero** | deshacer mi último movimiento |
+| **Para** | corregir errores sin reiniciar toda la partida |
+
+### Criterios de Aceptación
+
+**Scenario: Deshacer con historial disponible**
+
+**Given:** el jugador ya realizó al menos un movimiento en la partida
+
+**When:** activa la opción deshacer
+
+**Then:** el sistema restaura el estado inmediatamente anterior del tablero
+
+**And:** actualiza los contadores de acuerdo con el estado recuperado
+
+**Scenario: Deshacer sin historial**
+
+**Given:** no existen movimientos previos almacenados
+
+**When:** el jugador intenta deshacer
+
+**Then:** el sistema conserva el estado actual del juego
+
+**And:** muestra un mensaje indicando que no hay acciones para deshacer
+
+---
+
+## HU-13 – Solución automática del nivel
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Solución automática del nivel |
+| **Yo, como** | jugador |
+| **Quiero** | elegir el nivel que permite resolver automáticamente |
+| **Para** | ver una solución guiada y analizar estrategias de resolución |
+
+### Criterios de Aceptación
+
+**Scenario: Ejecución exitosa de solución automática**
+
+**Given:** el jugador está en un nivel habilitado para solución automática
+
+**And:** ha seleccionado un algoritmo permitido
+
+**When:** activa la opción resolver automáticamente
+
+**Then:** el sistema genera una secuencia válida de movimientos
+
+**And:** reproduce la solución de forma visible en la pantalla
+
+**Scenario: Rechazo por algoritmo o nivel no válido**
+
+**Given:** el jugador seleccionó un nivel no habilitado
+
+**When:** intenta ejecutar la solución automática
+
+**Then:** el sistema rechaza la operación
+
+**And:** muestra un mensaje indicando la causa
+
+---
+
+## HU-14 – Cronómetro y contadores visibles
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Cronómetro y contadores visibles |
+| **Yo, como** | jugador |
+| **Quiero** | ver en tiempo real el cronómetro, los movimientos y los empujes realizados |
+| **Para** | medir mi desempeño durante cada partida |
+
+### Criterios de Aceptación
+
+**Scenario: Actualización de indicadores durante la partida**
+
+**Given:** una partida se encuentra activa
+
+**When:** transcurre el tiempo o el jugador realiza acciones válidas
+
+**Then:** el sistema actualiza el cronómetro y los contadores visibles
+
+**And:** mantiene estos indicadores sincronizados con la partida
+
+**Scenario: Reinicio de indicadores al comenzar un nuevo nivel**
+
+**Given:** el jugador inicia una nueva partida o cambia de nivel
+
+**When:** se carga el estado inicial del tablero
+
+**Then:** el sistema reinicia el cronómetro y los contadores
+
+**And:** muestra los valores iniciales correspondientes al nuevo intento
+
+---
+
+## HU-15 – Selección de nivel
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Selección de nivel |
+| **Yo, como** | jugador |
+| **Quiero** | elegir el nivel que deseo jugar antes de iniciar la partida |
+| **Para** | decidir la dificultad o el progreso con el que quiero empezar |
+
+### Criterios de Aceptación
+
+**Scenario: Selección exitosa de nivel disponible**
+
+**Given:** el jugador se encuentra en la pantalla de selección de nivel
+
+**When:** elige uno de los niveles habilitados
+
+**Then:** el sistema carga la configuración del nivel seleccionado
+
+**And:** lo deja listo para iniciar la partida
+
+**Scenario: Selección inválida de nivel**
+
+**Given:** el jugador intenta elegir un nivel no disponible
+
+**When:** confirma la selección
+
+**Then:** el sistema rechaza la opción elegida
+
+**And:** muestra un mensaje indicando que el nivel no está habilitado
+
+---
+
+## HU-16 – Navegación desde el menú principal
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Navegación desde el menú principal |
+| **Yo, como** | usuario del sistema |
+| **Quiero** | acceder desde el menú principal a las funciones generales del juego |
+| **Para** | navegar fácilmente entre las opciones disponibles |
+
+### Criterios de Aceptación
+
+**Scenario: Acceso a una opción válida del menú**
+
+**Given:** el usuario se encuentra en el menú principal
+
+**When:** selecciona una opción disponible como jugar, cargar partida, estadísticas, ranking o manual
+
+**Then:** el sistema abre la pantalla correspondiente
+
+**And:** mantiene una navegación coherente con la opción elegida
+
+**Scenario: Intento de acceso a una opción no válida**
+
+**Given:** el usuario se encuentra en el menú principal
+
+**When:** intenta ejecutar una opción inexistente o no habilitada
+
+**Then:** el sistema no cambia de pantalla
+
+**And:** muestra una notificación de opción inválida
+
+---
+
+## HU-17 – Visualización del resultado final
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Visualización del resultado final |
+| **Yo, como** | jugador |
+| **Quiero** | ver una pantalla final clara al terminar la partida |
+| **Para** | conocer si gané o no y revisar un resumen del desempeño alcanzado |
+
+### Criterios de Aceptación
+
+**Scenario: Pantalla de victoria**
+
+**Given:** la partida termina con todas las cajas ubicadas en objetivos
+
+**When:** el sistema evalúa el estado final del nivel
+
+**Then:** muestra una pantalla con el mensaje de victoria
+
+**And:** presenta un resumen de movimientos, empujes y tiempo
+
+**Scenario: Pantalla de resultado no exitoso**
+
+**Given:** la partida finaliza sin cumplir la condición de victoria
+
+**When:** el sistema cierra el intento actual
+
+**Then:** muestra una pantalla con el resultado Game Over
+
+**And:** permite al jugador decidir si desea reintentar o salir
+
+---
+
+## HU-18 – Consulta del manual de usuario
+
+### Historia de Usuario
+
+| Campo | Contenido |
+|---|---|
+| **Título de la Historia de Usuario** | Consulta del manual de usuario |
+| **Yo, como** | usuario del sistema |
+| **Quiero** | consultar un manual con instrucciones de uso, controles e indicadores del juego |
+| **Para** | aprender a usar correctamente la aplicación antes o durante la partida |
+
+### Criterios de Aceptación
+
+**Scenario: Apertura del manual de usuario**
+
+**Given:** el usuario se encuentra en una pantalla con acceso al manual
+
+**When:** selecciona la opción manual de usuario
+
+**Then:** el sistema muestra una sección de ayuda con instrucciones claras
+
+**And:** explica controles, objetivos del juego e indicadores visibles
+
+**Scenario: Retorno desde el manual**
+
+**Given:** el usuario está consultando el manual de usuario
+
+**When:** selecciona la opción volver
+
+**Then:** el sistema regresa a la pantalla anterior
+
+**And:** conserva la navegación normal de la aplicación
